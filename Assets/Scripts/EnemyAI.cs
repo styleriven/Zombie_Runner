@@ -11,7 +11,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] float turnSpeed = 5f;
     bool isProvoked = false;
     float distanceToTarget =Mathf.Infinity;
-    
+    EnemyHealth health;
     NavMeshAgent navMeshAgent;
     Animator animator ;
     // Start is called before the first frame update
@@ -19,12 +19,16 @@ public class EnemyAI : MonoBehaviour
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-        
+        health = GetComponent<EnemyHealth>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(health.IsDead()) {
+            enabled = false;
+            navMeshAgent.enabled = false;
+        }
 
         distanceToTarget = Vector3.Distance(target.position,transform.position);
         if(isProvoked)
