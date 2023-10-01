@@ -1,49 +1,43 @@
-using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Ammo : MonoBehaviour
 {
     [SerializeField] AmmoSlot[] ammoSlots;
 
-
+    [System.Serializable]
+    private class AmmoSlot
+    {
+        public AmmoType ammoType;
+        public int ammoAmount;
+    }
 
     public int GetCurrentAmmo(AmmoType ammoType)
     {
         return GetAmmoSlot(ammoType).ammoAmount;
-
     }
+
     public void ReduceCurrentAmmo(AmmoType ammoType)
     {
         GetAmmoSlot(ammoType).ammoAmount--;
     }
-    public void Increase(AmmoSlot[] AmmoSlots)
+
+    public void IncreaseCurrentAmmo(AmmoType ammoType, int ammoAmount)
     {
-        foreach(AmmoSlot AmmoSlot in AmmoSlots)
-        {
-            Increase(AmmoSlot.ammoType,AmmoSlot.ammoAmount);
-        }    
+        GetAmmoSlot(ammoType).ammoAmount += ammoAmount;
     }
-    public void Increase(AmmoType ammoType, int number)
-    {
-          GetAmmoSlot(ammoType).ammoAmount += number; 
-    }
+
     private AmmoSlot GetAmmoSlot(AmmoType ammoType)
     {
-        AmmoSlot ammoSlot = this.ammoSlots.FirstOrDefault(slot => slot.ammoType == ammoType);
-        if (ammoSlot != null)
+        foreach (AmmoSlot slot in ammoSlots)
         {
-            return ammoSlot;
+            if (slot.ammoType == ammoType)
+            {
+                return slot;
+            }
         }
-        else
-        {
-
-            Debug.LogWarning("Ammo type not found: " + ammoType);
-            return null;
-
-        }
-
+        return null;
     }
+
 }

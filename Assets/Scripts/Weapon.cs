@@ -1,42 +1,46 @@
-
-using System;
+﻿using System;
 using System.Collections;
-using UnityEditor;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-
 
 public class Weapon : MonoBehaviour
 {
-    [SerializeField] Camera FPCamera ; 
+    [SerializeField] Camera FPCamera;
     [SerializeField] float range = 100f;
     [SerializeField] float damage = 30f;
     [SerializeField] ParticleSystem muzzleFlash;
     [SerializeField] GameObject hitEffect;
     [SerializeField] Ammo ammoSlot;
-    [SerializeField] float timeBetweenShots = 0.5f;
     [SerializeField] AmmoType ammoType;
+    [SerializeField] float timeBetweenShots = 0.5f;
+    [SerializeField] TextMeshProUGUI ammoText;
 
     bool canShoot = true;
+
     private void OnEnable()
     {
-           canShoot = true;
-      
+        canShoot = true;
     }
 
     void Update()
     {
-   
-            if (Input.GetMouseButtonDown(0) && canShoot == true)
-            {
-                StartCoroutine(Shoot());
-            }
+        DisplayAmmo();
+        if (Input.GetMouseButtonDown(0) && canShoot == true)
+        {
+            StartCoroutine(Shoot());
+        }
     }
 
-  
+    private void DisplayAmmo()
+    {
+        int currentAmmo = ammoSlot.GetCurrentAmmo(ammoType);
+        ammoText.text = currentAmmo.ToString();
+    }
+
     IEnumerator Shoot()
     {
         canShoot = false;
-        
         if (ammoSlot.GetCurrentAmmo(ammoType) > 0)
         {
             PlayMuzzleFlash();
@@ -57,14 +61,14 @@ public class Weapon : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(FPCamera.transform.position, FPCamera.transform.forward, out hit, range))
         {
-            Debug.Log(hit.transform.name);
             CreateHitImpact(hit);
             EnemyHealth target = hit.transform.GetComponent<EnemyHealth>();
-            if (target != null)
-            {
-                target.TakeDamage(damage);
-            }
-
+            if (target == null) return;
+            target.TakeDamage(damage);
+        }
+        else
+        {
+            return;
         }
     }
 

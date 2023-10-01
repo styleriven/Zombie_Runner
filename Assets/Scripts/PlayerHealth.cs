@@ -1,38 +1,17 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    // Start is called before the first frame update
-    [SerializeField] float Hp = 100f;
+    [SerializeField] float hitPoints = 100f;
 
-
-    void Start()
+    public void TakeDamage(float damage)
     {
-        
-    }
-    public void kill(float damage){
-        Hp -= damage;
-        if ( Hp <= 0)
+        hitPoints -= damage;
+        if (hitPoints <= 0)
         {
-            Hp= 0;
-            GetComponent<DeathHangler>().HandleDeath();
+            GetComponent<DeathHandler>().HandleDeath();
         }
-    }
-
-    public void health(float blood){
-        Hp += blood;
-        if(Hp > 100)
-        {
-            Hp = 100;
-        } 
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

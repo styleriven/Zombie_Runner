@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,35 +6,14 @@ using UnityEngine;
 public class WeaponSwitcher : MonoBehaviour
 {
     [SerializeField] int currentWeapon = 0;
-    [SerializeField] int numberWeapon = 0;
 
     void Start()
     {
         SetWeaponActive();
-        numberWeapon = transform.childCount;
-    }
-    private void SetWeaponActive()
-    {
-        int weaponIndex = 0;
-        foreach (Transform weapon in transform)
-        {
-            if(weaponIndex == this.currentWeapon)
-            {
-                weapon.gameObject.SetActive(true);
-            }
-            else
-            {
-                weapon.gameObject.SetActive(false);
-            }
-            weaponIndex++;
-        }
-       
     }
 
-    
     void Update()
     {
-     
         int previousWeapon = currentWeapon;
 
         ProcessKeyInput();
@@ -44,12 +23,11 @@ public class WeaponSwitcher : MonoBehaviour
         {
             SetWeaponActive();
         }
-
     }
 
     private void ProcessScrollWheel()
     {
-        if (Input.GetAxis("Mouse ScrollWheel") > 0)
+        if (Input.GetAxis("Mouse ScrollWheel") < 0)
         {
             if (currentWeapon >= transform.childCount - 1)
             {
@@ -61,7 +39,7 @@ public class WeaponSwitcher : MonoBehaviour
             }
         }
 
-        if (Input.GetAxis("Mouse ScrollWheel") < 0)
+        if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
             if (currentWeapon <= 0)
             {
@@ -88,14 +66,25 @@ public class WeaponSwitcher : MonoBehaviour
         {
             currentWeapon = 2;
         }
-        if (Input.GetKeyUp(KeyCode.Q))
-        {
-            this.currentWeapon++;
-            if (this.currentWeapon == this.numberWeapon)
-            {
-                currentWeapon = 0;
-            }
-            
-        }
     }
+
+    private void SetWeaponActive()
+    {
+        int weaponIndex = 0;
+
+        foreach (Transform weapon in transform)
+        {
+            if (weaponIndex == currentWeapon)
+            {
+                weapon.gameObject.SetActive(true);
+            }
+            else
+            {
+                weapon.gameObject.SetActive(false);
+            }
+            weaponIndex++;
+        }
+
+    }
+
 }
